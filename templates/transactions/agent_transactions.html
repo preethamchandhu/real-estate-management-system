@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Incoming Requests{% endblock %}
+{% block content %}
+<h2>Incoming Requests</h2>
+<table class="card">
+    <tr><th>Property</th><th>Client</th><th>Type</th><th>Amount</th><th>Status</th><th>Actions</th></tr>
+    {% for t in transactions %}
+    <tr>
+        <td><a href="{% url 'properties:detail' t.property.pk %}">{{ t.property.title }}</a></td>
+        <td>{{ t.client.username }}</td>
+        <td>{{ t.get_transaction_type_display }}</td>
+        <td>₹{{ t.amount }}</td>
+        <td><span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span></td>
+        <td>
+            {% if t.status == 'pending' %}
+            <a href="{% url 'transactions:update_status' t.pk 'approved' %}" class="btn btn-sm">Approve</a>
+            <a href="{% url 'transactions:update_status' t.pk 'rejected' %}" class="btn btn-sm btn-danger">Reject</a>
+            {% else %}
+            &mdash;
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="6">No requests yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Browse Properties{% endblock %}
+{% block content %}
+<div class="hero">
+    <h1>Find your next home in Bengaluru</h1>
+    <p>Browse verified listings from agents across the city — filter by budget, location, and bedrooms to find the right fit.</p>
+</div>
+
+<form method="get" class="search-bar card">
+    <div><label>City</label>{{ form.city }}</div>
+    <div><label>Type</label>{{ form.listing_type }}</div>
+    <div><label>Min Price (₹)</label>{{ form.min_price }}</div>
+    <div><label>Max Price (₹)</label>{{ form.max_price }}</div>
+    <div><label>Min Bedrooms</label>{{ form.bedrooms }}</div>
+    <div><button type="submit" class="btn btn-gold">Search</button></div>
+</form>
+
+<div class="property-grid">
+    {% for p in properties %}
+    <div class="card property-card">
+        <div class="thumb">
+            {% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}">{% endif %}
+        </div>
+        <div class="body">
+            <span class="badge badge-type">{{ p.get_listing_type_display }}</span>
+            <h4>{{ p.title }}</h4>
+            <p class="meta">{{ p.city }} &middot; {{ p.bedrooms }} bd &middot; {{ p.bathrooms }} ba &middot; {{ p.area_sqft }} sqft</p>
+            <span class="price-tag">₹{{ p.price }}{% if p.listing_type == 'rent' %}<span class="unit">/mo</span>{% endif %}</span>
+            <div class="btn-group">
+                <a href="{% url 'properties:detail' p.pk %}" class="btn btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state card">
+        <h3>No properties found</h3>
+        <p>Try widening your search filters, or check back soon for new listings.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}{{ property.title }}{% endblock %}
+{% block content %}
+<a href="{% url 'home' %}">&larr; Back to listings</a>
+<div class="card" style="margin-top:14px;">
+    {% if property.image %}
+        <img src="{{ property.image.url }}" style="width:100%;max-height:380px;object-fit:cover;border-radius:8px;margin-bottom:16px;">
+    {% endif %}
+    <span class="badge badge-type">{{ property.get_listing_type_display }}</span>
+    <span class="badge badge-{{ property.status }}">{{ property.get_status_display }}</span>
+    <h2 style="margin-top:10px;">{{ property.title }}</h2>
+    <p style="color:var(--ink-soft);">{{ property.address }}, {{ property.city }}</p>
+    <span class="price-tag property-detail-price">₹{{ property.price }}{% if property.listing_type == 'rent' %}<span class="unit">/mo</span>{% endif %}</span>
+
+    <p style="margin-top:18px;color:var(--ink-soft);">{{ property.bedrooms }} Bedrooms &middot; {{ property.bathrooms }} Bathrooms &middot; {{ property.area_sqft }} sqft</p>
+    <p>{{ property.description }}</p>
+    <p><strong>Listed by:</strong> {{ property.agent.username }}</p>
+
+    <div class="btn-group">
+        {% if user.is_authenticated and user.is_client and property.status == 'available' %}
+            <a href="{% url 'transactions:request' property.pk %}" class="btn btn-gold">Request to Buy/Rent</a>
+        {% endif %}
+        {% if user == property.agent %}
+            <a href="{% url 'properties:update' property.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'properties:delete' property.pk %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'properties:add_document' property.pk %}" class="btn btn-secondary">+ Add Document</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if documents %}
+<div class="card">
+    <h3>Supporting Documents</h3>
+    <ul>
+        {% for d in documents %}
+        <li><strong>{{ d.title }}</strong> — {{ d.description }} <em style="color:var(--ink-soft);">({{ d.created_at }})</em></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if activity and user == property.agent %}
+<div class="card">
+    <h3>Activity Log</h3>
+    <ul>
+        {% for a in activity %}
+        <li>{{ a.actor }} — {{ a.action }} — {{ a.timestamp }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

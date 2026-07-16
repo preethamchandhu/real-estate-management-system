@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}My Listings{% endblock %}
+{% block content %}
+<h2>My Listings</h2>
+<p><a href="{% url 'properties:create' %}" class="btn">+ Add New Property</a></p>
+<table class="card">
+    <tr><th>Title</th><th>City</th><th>Price</th><th>Status</th><th>Actions</th></tr>
+    {% for p in properties %}
+    <tr>
+        <td>{{ p.title }}</td>
+        <td>{{ p.city }}</td>
+        <td>₹{{ p.price }}</td>
+        <td><span class="badge badge-{{ p.status }}">{{ p.get_status_display }}</span></td>
+        <td>
+            <a href="{% url 'properties:detail' p.pk %}">View</a> |
+            <a href="{% url 'properties:update' p.pk %}">Edit</a> |
+            <a href="{% url 'properties:delete' p.pk %}">Delete</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">You haven't listed any properties yet.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

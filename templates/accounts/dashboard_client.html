@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Client Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.username }}</h2>
+<p><a href="{% url 'home' %}" class="btn">Browse Properties</a></p>
+
+<div class="card">
+    <h3>My Recent Requests</h3>
+    <table>
+        <tr><th>Property</th><th>Type</th><th>Amount</th><th>Status</th><th>Date</th></tr>
+        {% for t in my_transactions|slice:":8" %}
+        <tr>
+            <td><a href="{% url 'properties:detail' t.property.pk %}">{{ t.property.title }}</a></td>
+            <td>{{ t.get_transaction_type_display }}</td>
+            <td>₹{{ t.amount }}</td>
+            <td><span class="badge badge-{{ t.status }}">{{ t.get_status_display }}</span></td>
+            <td>{{ t.created_at|date:"d M Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No requests yet.</td></tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

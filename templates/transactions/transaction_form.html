@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Request Property{% endblock %}
+{% block content %}
+<div class="card" style="max-width:520px;margin:0 auto;">
+    <h2>Request "{{ property.title }}"</h2>
+    <p>Listed at ₹{{ property.price }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <label>Transaction Type</label>{{ form.transaction_type }}
+        <label>Offer Amount (₹)</label>{{ form.amount }}
+        <label>Message to Agent</label>{{ form.message }}
+        <button type="submit" class="btn">Send Request</button>
+    </form>
+</div>
+{% endblock %}

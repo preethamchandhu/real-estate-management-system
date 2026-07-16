@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Agent Dashboard{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.username }}</h2>
+<div class="stat-grid">
+    <div class="stat-box"><div class="num">{{ property_count }}</div><div class="label">My Listings</div></div>
+    <div class="stat-box"><div class="num">{{ pending_transactions.count }}</div><div class="label">Pending Requests</div></div>
+</div>
+<p>
+    <a href="{% url 'properties:create' %}" class="btn">+ Add New Property</a>
+    <a href="{% url 'properties:agent_list' %}" class="btn btn-secondary">Manage Listings</a>
+    <a href="{% url 'transactions:agent_transactions' %}" class="btn btn-secondary">View Requests</a>
+</p>
+
+<div class="card">
+    <h3>My Recent Listings</h3>
+    <div class="property-grid">
+        {% for p in my_properties|slice:":6" %}
+        <div class="card property-card">
+            <div class="thumb">{% if p.image %}<img src="{{ p.image.url }}" alt="{{ p.title }}">{% endif %}</div>
+            <div class="body">
+                <h4>{{ p.title }}</h4>
+                <span class="price-tag">₹{{ p.price }}</span>
+                <span class="badge badge-{{ p.status }}">{{ p.get_status_display }}</span>
+                <p style="margin-top:10px;"><a href="{% url 'properties:detail' p.pk %}">View</a> &nbsp;|&nbsp; <a href="{% url 'properties:update' p.pk %}">Edit</a></p>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state"><p>No properties listed yet.</p></div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

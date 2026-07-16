@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}{{ mode }} Property{% endblock %}
+{% block content %}
+<div class="card" style="max-width:600px;margin:0 auto;">
+    <h2>{{ mode }} Property</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+            <label>{{ field.label }}</label>
+            {{ field }}
+            {{ field.errors }}
+        {% endfor %}
+        <button type="submit" class="btn">Save Property</button>
+    </form>
+</div>
+{% endblock %}
