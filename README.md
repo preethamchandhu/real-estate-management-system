@@ -1,105 +1,239 @@
-# Real Estate Transaction & Property Management System
+# 🏠 Real Estate Management System
 
-Django + MySQL (relational data) + MongoDB (unstructured docs/activity log) web app
-with 3 roles: **Admin**, **Agent**, **Client**.
+A full-stack **Real Estate Management System** built using **Django**, **MySQL**, and **MongoDB**. The application provides role-based access for **Admin**, **Agent**, and **Client**, enabling property management, transaction processing, document storage, and activity tracking.
 
-## Features
-- Custom user model with roles (admin / agent / client)
-- Agents: list, edit, delete properties; upload supporting documents (stored in MongoDB); approve/reject buy-rent requests
-- Clients: browse/search properties, request to buy/rent, track request status
-- Admin: full Django admin panel + dashboard with stats
-- Hybrid DB: MySQL for Users/Properties/Transactions, MongoDB for property documents & activity log
+---
 
-## 1. Prerequisites
-- Python 3.10+
-- MySQL Server running locally
-- MongoDB Server running locally (optional — app still runs without it, just skips document/activity features)
+## 🚀 Features
 
-## 2. Setup
+### 👨‍💼 Admin
+- Dashboard with system statistics
+- Manage users, properties, and transactions
+- Monitor platform activities
+
+### 🏡 Agent
+- Add, edit, and delete property listings
+- Upload property-related documents
+- Approve or reject buy/rent requests
+- Manage personal property listings
+
+### 👤 Client
+- Browse and search properties
+- Request to buy or rent properties
+- Track request status
+- View property details
+
+### 💾 Hybrid Database Architecture
+- **MySQL**
+  - User Management
+  - Property Listings
+  - Transactions
+
+- **MongoDB**
+  - Property Documents
+  - Property Activity Logs
+
+---
+
+# 🛠️ Tech Stack
+
+- Python
+- Django
+- MySQL
+- MongoDB
+- HTML5
+- CSS3
+- Bootstrap
+- Git & GitHub
+
+---
+
+# 📂 Project Structure
+
+```
+realestate/
+│
+├── accounts/
+├── properties/
+├── transactions/
+├── templates/
+├── static/
+├── realestate/
+└── manage.py
+```
+
+---
+
+# ⚙️ Installation
+
+## 1. Clone Repository
 
 ```bash
-# from the project root
-python3 -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+git clone https://github.com/preethamchandhu/real-estate-management-system.git
+cd real-estate-management-system
+```
 
+---
+
+## 2. Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-## 3. Create the MySQL database
+---
+
+## 4. Configure MySQL
+
+Create a database named:
 
 ```sql
-CREATE DATABASE realestate_db CHARACTER SET utf8mb4;
+CREATE DATABASE realestate_db;
 ```
 
-## 4. Configure environment variables (or edit realestate/settings.py directly)
+Update your database settings in `realestate/settings.py` or use environment variables.
+
+---
+
+## 5. Configure MongoDB
+
+Start MongoDB locally.
+
+Default configuration:
+
+```text
+MONGO_URI = mongodb://localhost:27017/
+MONGO_DB_NAME = realestate_mongo
+```
+
+---
+
+## 6. Apply Migrations
 
 ```bash
-export MYSQL_DB=realestate_db
-export MYSQL_USER=root
-export MYSQL_PASSWORD=yourpassword
-export MYSQL_HOST=localhost
-export MYSQL_PORT=3306
-export MONGO_URI=mongodb://localhost:27017/
-export MONGO_DB_NAME=realestate_mongo
+python manage.py migrate
 ```
-(On Windows, use `set VAR=value` instead of `export`.)
 
-## 5. Run migrations & create an admin user
+---
+
+## 7. Create Superuser
 
 ```bash
-python3 manage.py migrate
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 ```
-When creating the superuser, Django will still ask for username/email/password.
-After creation, set that user's `role` to `admin` via `/admin/` (or the shell) —
-superusers already bypass role checks, so this is optional but keeps things consistent.
 
-## 6. (Optional) Load demo data
+---
 
-Populate the app with a demo agent, a demo client, 6 sample Bengaluru listings
-(with generated placeholder images), and one sample pending request:
+## 8. Load Demo Data (Optional)
 
 ```bash
-python3 manage.py seed_demo
+python manage.py seed_demo
 ```
 
-```
-Agent login:  demo_agent / Demo@12345
-Client login: demo_client / Demo@12345
-```
+Demo Accounts
 
-Safe to re-run — it skips anything that already exists.
+| Role | Username | Password |
+|------|----------|----------|
+| Agent | demo_agent | Demo@12345 |
+| Client | demo_client | Demo@12345 |
 
-## 7. Run the server
+---
+
+## 9. Run Server
 
 ```bash
-python3 manage.py runserver
+python manage.py runserver
 ```
 
-Visit http://127.0.0.1:8000/
+Open
 
-- `/` — browse properties (public)
-- `/accounts/register/` — sign up as Agent or Client
-- `/admin/` — Django admin (for the superuser you created)
-- `/dashboard/` — role-based dashboard after login
-
-## 8. Typical flow to test
-1. Register one user as **Agent**, another as **Client** (two browser sessions/incognito, or logout/login).
-2. As Agent: add a property from the dashboard.
-3. As Client: browse to the property, click "Request to Buy/Rent".
-4. As Agent: go to "Requests", approve or reject it.
-5. Optionally, as Agent on a property's detail page, add a supporting document — this is stored in MongoDB and shown below the listing.
-
-## Project structure
 ```
-realestate/          # project settings & root urls
-accounts/            # custom User model, auth, dashboards
-properties/          # Property model, MySQL CRUD + MongoDB doc/activity helper (mongo.py)
-transactions/         # Transaction model (buy/rent requests + approval flow)
-templates/            # all HTML templates
-static/css/style.css  # styling
+http://127.0.0.1:8000/
 ```
 
-## Notes
-- If MongoDB isn't running, the app degrades gracefully — property pages and everything else still work, only the "Supporting Documents"/"Activity Log" sections stay empty.
-- `DEBUG = True` and `SECRET_KEY` in `settings.py` are dev defaults — change both before deploying anywhere public.
+---
+
+# 🔄 Application Workflow
+
+1. Register as Agent or Client
+2. Agent adds property listings
+3. Client browses available properties
+4. Client submits Buy/Rent request
+5. Agent approves or rejects request
+6. Property documents are stored in MongoDB
+7. Property activities are logged in MongoDB
+
+---
+
+# 📊 Database Architecture
+
+### MySQL
+
+- Users
+- Properties
+- Transactions
+
+### MongoDB
+
+- Property Documents
+- Activity Logs
+
+---
+
+# ✨ Key Highlights
+
+- Hybrid Database Architecture (MySQL + MongoDB)
+- Role-Based Authentication
+- CRUD Operations
+- Property Search & Filtering
+- Transaction Management
+- Responsive UI
+- Activity Logging
+- Document Management
+
+---
+
+# 📸 Screenshots
+
+Add screenshots of:
+
+- Home Page
+- Admin Dashboard
+- Agent Dashboard
+- Client Dashboard
+- Property Details
+- Add Property
+- MongoDB Collections
+
+---
+
+# 👨‍💻 Author
+
+**Preetham Chandhu**
+
+- GitHub: https://github.com/preethamchandhu
+- LinkedIn: https://www.linkedin.com/in/preethamchandhur
+
+---
+
+⭐ If you found this project useful, consider giving it a Star.
